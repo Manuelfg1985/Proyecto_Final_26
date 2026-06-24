@@ -1,33 +1,43 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import dotenv from "dotenv";
+dotenv.config();
 
-// Agregar "export" aquí adelante:
+
 export const login = async (req, res) => {
     const { email, password } = req.body;
-    try {
-        const user = { email: "user@gmail.com", password: "$2a$10$" }; // Tu ejemplo
 
-        if (!user) {
-            return res.status(400).json({ message: 'Credenciales inválidas' });
+      try {
+        // 1. Validar que llegaron los campos
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Email y contraseña son requeridos' });
         }
 
-        const isMatch = true; // Simulado para el ejemplo
-        if (!isMatch) {
-            return res.status(400).json({ message: 'Credenciales inválidas' });
+        // 2. Comparar contra las credenciales del entorno
+        const validEmail    = process.env.ADMIN_EMAIL;
+        const validPassword = process.env.ADMIN_PASSWORD;
+
+        const emailMatch    = email === validEmail;
+        const passwordMatch = password === validPassword; 
+
+        if (!emailMatch || !passwordMatch) {
+            return res.status(401).json({ message: 'Credenciales inválidas' });
         }
 
-        const payload = { email: user.email };
+        // 3. Generar token
+        const payload = { email };
 
         const token = jwt.sign(payload, process.env.JWT_SECRET, {
-            expiresIn: '3 h'
+            expiresIn: '3h'
         });
 
-        res.json({
+        return res.json({
             message: 'Login exitoso',
             token
         });
 
     } catch (error) {
-        res.status(500).json({ message: 'Error en el servidor' });
+        console.error('Error en login:', error);
+        return res.status(500).json({ message: 'Error en el servidor' });
     }
-};
+}
