@@ -37,7 +37,11 @@ export const createUser = async (req, res) => {
 
   
     await addDoc(collection(db, "postulantes"), newUser.toFirestore());
-    res.status(201).json({ message: 'User created successfully' });
+    res.status(201).json({ message: 'User created successfully',
+      data: {
+        ...newUser.toFirestore()
+      }
+     });
   } catch (error) {
     res.status(500).json({ message: 'Error creating user', error: error.message });
 
@@ -67,7 +71,7 @@ export const deleteUser = async (req, res) => {
   try {
     const userRef = doc(db, "postulantes", id);
     await deleteDoc(userRef);
-    res.json({ message: 'User deleted successfully' });
+    res.json({ message: 'User deleted successfully',});
   }
     catch (error) {
     res.status(500).json({ message: 'Error deleting user', error: error.message });

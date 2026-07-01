@@ -1,6 +1,9 @@
 import jwt from 'jsonwebtoken';
+import dotenv from "dotenv";
+dotenv.config();
 
 export const authMiddleware = (req, res, next) => {
+
     // 1. Obtener el token del header 'Authorization'
     // El formato estándar es: "Bearer <TOKEN>"
     const authHeader = req.header('Authorization');

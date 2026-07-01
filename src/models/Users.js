@@ -49,7 +49,6 @@ toFirestore()
       city: data.city,
       province: data.province,
       applied_position: data.applied_position,
-      // Si guardaste la fecha como Date, Firebase la devuelve como Timestamp. La convertimos:
       application_date: data.application_date ? data.application_date.toDate() : null,
       status: data.status
     })
